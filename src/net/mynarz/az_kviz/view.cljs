@@ -3,15 +3,15 @@
             [cljs.spec.alpha :as s]
             [goog.string.format]
             [thi.ng.color.core :as color]
-            [thi.ng.geom.svg.core :as svg]
             [thi.ng.geom.svg.adapter :as adapt] 
+            [thi.ng.geom.svg.core :as svg]
             [thi.ng.math.core :as math]))
 
 ; ----- Default configuration -----
 
 (def colours
   {:active "#eee"
-   :default "#fefefe" ;"#fefefe"
+   :default "#fefefe"
    :hover "#fff"
    :hover-missed "#575757"
    :missed "#020100"
