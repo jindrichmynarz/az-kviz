@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand:700&subset=latin-ext');
+
 body {
-  font-family: 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
+  font-family: Quicksand, 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
   max-width: 600px;
   margin: 0 auto;
   padding-top: 72px;
@@ -34,7 +36,7 @@ a:hover {
 }
 
 #az-kviz {
-  font-family: Arial, sans-serif;
+  font-family: Quicksand, Arial, sans-serif;
 }
 
 #az-kviz .tile {
@@ -43,13 +45,12 @@ a:hover {
 
 #az-kviz .tile text {
   alignment-baseline: middle;
-  font-size: 35px;
   font-weight: bold;
   text-anchor: middle;
-  fill: none;
+  fill: #fff;
   paint-order: stroke;
   stroke: hotpink;
-  stroke-width: 1px;
+  stroke-width: 2px;
   stroke-linecap: butt;
   stroke-linejoin: miter;
 }
