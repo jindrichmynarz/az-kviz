@@ -15,8 +15,8 @@
             (range 1 (inc n)))
           (row [y length]
             (map vector (range length) (repeat y)))
-          (tile [text points]
-            {:points points
+          (tile [text coords]
+            {:coords coords
              :status :default
              :text text})]
     (fn [side]

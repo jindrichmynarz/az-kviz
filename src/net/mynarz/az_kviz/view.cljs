@@ -166,8 +166,8 @@
                       (* (/ 3 2) r y)
                       (* (inc y) y-space) ; Account for spaces
                       padding))
-        tile-points (fn [{:keys [points]}]
-                      (let [center [(x-offset points) (y-offset points)]]
+        tile-points (fn [{:keys [coords]}]
+                      (let [center [(x-offset coords) (y-offset coords)]]
                         {:center center
                          :inner (hexagon inner-r center)
                          :outer (hexagon r center)
