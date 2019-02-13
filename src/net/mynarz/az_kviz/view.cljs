@@ -20,6 +20,7 @@
                            :player-2 "#354d65"}
                  :hex-shade 0.8
                  :inner-hex-size 0.87
+                 :on-click js/console.log
                  :radius 35
                  :spacing 0.05
                  :stroke-width 1}})
@@ -93,18 +94,20 @@
 
 (defn- tile
   "An AZ-kvíz tile.
+  `on-click` is a function handling click events that receive tile ID as the argument.
   `center` are the [x y] coordinates of the tile.
   `inner` is the collection of [x y] points for the inner hexagon.
   `outer` is the collection of [x y] points for the outer hexagon.
   `radius` is the tile radius from its centre to its edge.
   `status` is the state of the tile as a keyword.
   `text` is the text to show in the tile."
-  [{:keys [center inner outer radius]}
+  [on-click
+   {:keys [center id inner outer radius]}
    {:keys [status text]}]
   (let [outer-fill (format "url(#%s-outer)" (name status))
         inner-fill (format "url(#%s-inner)" (name status))
         font-size (if (< (count text) 3) radius (* radius (/ 2 3)))]
-    [:g.tile {}
+    [:g.tile {:on-click (fn [_] (on-click id))}
      [svg/polygon outer 
                   {:class "outer"
                    :fill outer-fill}]
@@ -140,10 +143,11 @@
           :keys [colours
                  hex-shade
                  inner-hex-size
+                 on-click
                  spacing
                  stroke-width]} :tile-config
          n :side} (if (seq config)
-                    (deep-merge config board-config)
+                    (deep-merge board-config config)
                     board-config)
         padding r ; Radius as padding
         inner-r (* r inner-hex-size) ; Tile's inner hexagon's radius
@@ -171,14 +175,16 @@
                       (* (/ 3 2) r y)
                       (* (inc y) y-space) ; Account for spaces
                       padding))
-        tile-points (fn [{:keys [coords]}]
+        tile-points (fn [{:keys [coords id]}]
                       (let [center [(x-offset coords) (y-offset coords)]]
                         {:center center
+                         :id id
                          :inner (hexagon inner-r center)
                          :outer (hexagon r center)
                          :radius r}))
         tiles (map tile-points state)
-        gradients (mapcat (partial status-gradients hex-shade) colours)]
+        gradients (mapcat (partial status-gradients hex-shade) colours)
+        make-tile (partial tile on-click)]
     (fn [_ state]
       (adapt/inject-element-attribs
         [:svg#az-kviz {:x 0
@@ -186,4 +192,4 @@
                        :width board-width
                        :height board-height}
          [:defs drop-shadow gradients]
-         (map tile tiles state)]))))
+         (map make-tile tiles state)]))))
