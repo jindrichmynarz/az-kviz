@@ -1,10 +1,22 @@
 (ns net.mynarz.az-kviz.view
-  (:require [net.mynarz.az-kviz.colour :refer [colours darken]]
-            [net.mynarz.az-kviz.spec :as spec]
+  (:require [net.mynarz.az-kviz.spec :as spec]
             [cljs.spec.alpha :as s]
             [goog.string.format]
+            [thi.ng.color.core :as color]
             [thi.ng.geom.svg.core :as svg]
-            [thi.ng.geom.svg.adapter :as adapt])) 
+            [thi.ng.geom.svg.adapter :as adapt] 
+            [thi.ng.math.core :as math]))
+
+; ----- Default configuration -----
+
+(def colours
+  {:active "#eee"
+   :default "#fefefe" ;"#fefefe"
+   :hover "#fff"
+   :hover-missed "#575757"
+   :missed "#020100"
+   :player-1 "#4dbbc6"
+   :player-2 "#f25d00"})
 
 ; ----- Aliases ----
 
@@ -27,6 +39,14 @@
                    :stdDeviation 3}]])
 
 ; ----- Private functions -----
+
+(defn- darken
+  "Darken a CSS `colour`, such as #ff69b4, by `amount` from [0, 1]."
+  [colour amount]
+  (-> (color/css colour)
+      (math/mix color/BLACK amount)
+      color/as-css
+      deref))
 
 (defn- regular-polygon
   "Generate points of a regular polygon that has a number of `sides`,
