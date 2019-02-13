@@ -35,8 +35,8 @@
     ::player-2})
 
 (s/def ::text
-  ; Tile text
-  string?)
+  ; Tile text, recommended to be max 4 characters
+  (s/and string? (comp (partial >= 4) count)))
 
 (s/def ::tile
   (s/keys :req-un [::points
