@@ -89,7 +89,8 @@
   [{:keys [center inner outer radius]}
    {:keys [status text]}]
   (let [outer-fill (format "url(#%s-outer)" (name status))
-        inner-fill (format "url(#%s-inner)" (name status))]
+        inner-fill (format "url(#%s-inner)" (name status))
+        font-size (if (< (count text) 3) radius (* radius (/ 2 3)))]
     [:g.tile {}
      [svg/polygon outer 
                   {:class "outer"
@@ -97,7 +98,7 @@
      [svg/polygon inner
                   {:class "inner"
                    :fill inner-fill}]
-     [svg/text center text {:font-size radius}]]))
+     [svg/text center text {:font-size font-size}]]))
 
 (defn- status-gradients
   "Generate SVG gradients for the given `status` and `colour`."
