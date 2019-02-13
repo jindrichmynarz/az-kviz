@@ -21,7 +21,7 @@
              :text text})]
     (fn [side]
       (let [size (triangular-number side)
-            indices (range-1 size)
+            indices (map str (range-1 size))
             points (->> (range-1 side)
                         (map-indexed row)
                         (apply concat))]
