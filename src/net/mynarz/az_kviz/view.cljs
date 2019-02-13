@@ -120,6 +120,13 @@
 
 ; ----- Public functions -----
 
+(s/def ::board-args
+  (s/cat :tile-config ::spec/tile-config
+         :board-state ::spec/board-state))
+(s/fdef board
+        :args ::board-args
+        :ret (s/fspec :args ::board-args
+                      :ret ::spec/hiccup))
 (defn board
   [{{r :radius
      :keys [inner-hex-size

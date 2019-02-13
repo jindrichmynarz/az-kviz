@@ -73,3 +73,11 @@
 
 (s/def ::board-config
   (s/keys :opt-un [::side ::tile-config]))
+
+(s/def ::any any?)
+
+(s/def ::hiccup
+  ; Hiccup representation of HTML
+  ; We don't go into the details, any vector will do.
+  (s/coll-of ::any
+             :kind vector?))
