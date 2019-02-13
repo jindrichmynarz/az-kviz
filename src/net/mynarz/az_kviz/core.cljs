@@ -11,18 +11,18 @@
   "Initialize the state for board with `side` length."
   (letfn [(triangular-number [n]
             (/ (* n (inc n)) 2))
-          (range-1 [n]
-            (range 1 (inc n)))
           (row [y length]
             (map vector (range length) (repeat y)))
-          (tile [text coords]
+          (tile [id coords]
             {:coords coords
+             :id id
              :status :default
-             :text text})]
+             :text (-> id inc str)})]
     (fn [side]
       (let [size (triangular-number side)
-            indices (map str (range-1 size))
-            points (->> (range-1 side)
+            indices (range size)
+            points (->> (inc size)
+                        (range 1)
                         (map-indexed row)
                         (apply concat))]
         (mapv tile indices points)))))
@@ -37,7 +37,9 @@
 
 (defn wrapper
   []
-  [board {} @state])
+  [board {:tile-config {:on-click (fn [id]
+                                    (swap! state assoc-in [id :status] :player-1))}}
+         @state])
 
 ;; -------------------------
 ;; Initialize app
