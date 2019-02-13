@@ -107,10 +107,10 @@
   (let [outer-fill (format "url(#%s-outer)" (name status))
         inner-fill (format "url(#%s-inner)" (name status))
         font-size (if (< (count text) 3) radius (* radius (/ 2 3)))
-        available? (= status :default)]
-    [svg/group {:class (cond-> ["tile"]
-                         available? (conj "available"))
-                :on-click (fn [_] (on-click id))}
+        available? (= status :default)
+        classes (cond-> ["tile"] available? (conj "available"))]
+    [svg/group (cond-> {:class classes}
+                  available? (assoc :on-click (fn [_] (on-click id))))
      [svg/polygon outer 
                   {:class "outer"
                    :fill outer-fill}]
