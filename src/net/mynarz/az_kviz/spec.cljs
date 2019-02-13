@@ -17,12 +17,12 @@
   ; Number of tiles per side of a board
   ::pos-int)
 
-(s/def ::point
-  ; [x, y] point
-  (s/tuple ::pos-num ::pos-num))
+(s/def ::coord
+  (s/and integer? (complement neg?)))
 
-(s/def ::points
-  (s/coll-of ::point))
+(s/def ::coords
+  ; [x, y] coordinates
+  (s/tuple ::coord ::coord))
 
 (s/def ::status
   ; Status of a tile
@@ -39,7 +39,7 @@
   (s/and string? (comp (partial >= 4) count)))
 
 (s/def ::tile
-  (s/keys :req-un [::points
+  (s/keys :req-un [::coords
                    ::status
                    ::text]))
 
