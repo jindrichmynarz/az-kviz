@@ -47,21 +47,17 @@ a:hover {
   alignment-baseline: middle;
   font-weight: bold;
   text-anchor: middle;
-  fill: #fff;
   paint-order: stroke;
-  stroke: hotpink;
-  stroke-width: 2px;
   stroke-linecap: butt;
   stroke-linejoin: miter;
 }
 
 #az-kviz .tile:hover text {
-  fill: hotpink;
   stroke: none;
 }
 
 #az-kviz .outer {
-  stroke: hotpink;
+  stroke: #000;
 }
 
 #az-kviz .tile:hover .inner {
