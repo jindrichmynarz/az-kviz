@@ -52,7 +52,7 @@ a:hover {
   stroke-linejoin: miter;
 }
 
-#az-kviz .tile:hover text {
+#az-kviz .tile.available:hover text {
   stroke: none;
 }
 
@@ -60,11 +60,11 @@ a:hover {
   stroke: #000;
 }
 
-#az-kviz .tile:hover .inner {
+#az-kviz .tile.available:hover .inner {
   fill: url(#hover-inner);
 }
 
-#az-kviz .tile:hover .outer {
+#az-kviz .tile.available:hover .outer {
   fill: url(#hover-outer);
   filter: url(#drop-shadow);
 }
