@@ -9,14 +9,20 @@
 
 ; ----- Default configuration -----
 
-(def colours
-  {:active "#eee"
-   :default "#fefefe"
-   :hover "#fff"
-   :hover-missed "#575757"
-   :missed "#020100"
-   :player-1 "#4dbbc6"
-   :player-2 "#f25d00"})
+(def board-config
+  {:side 7
+   :tile-config {:colours {:active "#dedede"
+                           :default "#ccc"
+                           :hover "#dedede"
+                           :hover-missed "#4d4d4d"
+                           :missed "#333"
+                           :player-1 "#e40000"
+                           :player-2 "#354d65"}
+                 :hex-shade 0.8
+                 :inner-hex-size 0.87
+                 :radius 35
+                 :spacing 0.05
+                 :stroke-width 1}})
 
 ; ----- Aliases ----
 
@@ -35,16 +41,23 @@
   [:filter#drop-shadow
    [:feDropShadow {:dx 1
                    :dy 1
-                   :floodColor "rgba(255,105,180,0.5)"
-                   :stdDeviation 3}]])
+                   :floodColor "#0000080"
+                   :stdDeviation 2}]])
 
 ; ----- Private functions -----
 
-(defn- darken
-  "Darken a CSS `colour`, such as #ff69b4, by `amount` from [0, 1]."
+(defn- deep-merge
+  "Deep merge `maps`."
+  [& maps]
+  (if (every? map? maps)
+    (apply merge-with deep-merge maps)
+    (last maps)))
+
+(defn- lighten
+  "Lighten a CSS `colour`, such as #ff69b4, by `amount` from [0, 1]."
   [colour amount]
   (-> (color/css colour)
-      (math/mix color/BLACK amount)
+      (math/mix color/WHITE amount)
       color/as-css
       deref))
 
@@ -101,23 +114,16 @@
      [svg/text center text {:font-size font-size}]]))
 
 (defn- status-gradients
-  "Generate SVG gradients for the given `status` and `colour`."
-  [{:keys [hex-shade]
-    :or {hex-shade 0}}
-   [status colour]]
+  "Generate SVG gradients for the given `status` and `colour`.
+  Gradient shading amount is controlled by `hex-shade`."
+  [hex-shade [status colour]]
   (let [start [0 colour]
-        end [100 (darken colour hex-shade)]
+        end [100 (lighten colour hex-shade)]
         gradient (fn [status suffix attrs]
                    (let [id (str (name status) suffix)]
                      (svg/linear-gradient id attrs start end)))] 
     [(gradient status "-inner" {:x1 0 :x2 0 :y1 0 :y2 1})
      (gradient status "-outer" {:x1 0 :x2 0 :y1 1 :y2 0})]))
-
-(defn- gradients
-  [{:keys [status-colours]
-    :or {status-colours colours}
-    :as config}]
-  (mapcat (partial status-gradients config) status-colours))
 
 ; ----- Public functions -----
 
@@ -129,18 +135,17 @@
         :ret (s/fspec :args ::board-args
                       :ret ::spec/hiccup))
 (defn board
-  [{{r :radius
-     :keys [inner-hex-size
-            spacing
-            stroke-width]
-     :or {inner-hex-size 0.87
-          r 35
-          spacing 0.07
-          stroke-width 1}} :tile-config
-    n :side
-    :or {n 7}}
-   state]
-  (let [padding r ; Radius as padding
+  [config state]
+  (let [{{r :radius
+          :keys [colours
+                 hex-shade
+                 inner-hex-size
+                 spacing
+                 stroke-width]} :tile-config
+         n :side} (if (seq config)
+                    (deep-merge config board-config)
+                    board-config)
+        padding r ; Radius as padding
         inner-r (* r inner-hex-size) ; Tile's inner hexagon's radius
         y-space (* 2 r spacing) ; Vertical space between tiles
         x-space (* y-space (/ sqrt-3 2)) ; Horizontal space between tiles
@@ -172,12 +177,13 @@
                          :inner (hexagon inner-r center)
                          :outer (hexagon r center)
                          :radius r}))
-        tiles (map tile-points state)]
-    (fn [config state]
+        tiles (map tile-points state)
+        gradients (mapcat (partial status-gradients hex-shade) colours)]
+    (fn [_ state]
       (adapt/inject-element-attribs
         [:svg#az-kviz {:x 0
                        :y 0
                        :width board-width
                        :height board-height}
-         [:defs drop-shadow (gradients config)]
+         [:defs drop-shadow gradients]
          (map tile tiles state)]))))
