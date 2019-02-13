@@ -26,13 +26,7 @@
 
 (s/def ::status
   ; Status of a tile
-  #{:active
-    :default 
-    :hover
-    ::hover-missed
-    ::missed
-    ::player-1
-    ::player-2})
+  keyword?)
 
 (s/def ::text
   ; Tile text, recommended to be max 4 characters
@@ -48,6 +42,21 @@
   (s/coll-of ::tile
              :kind vector?
              :min-count 1))
+
+(s/def ::colour
+  (s/and string?
+         (comp #{4 7} count)
+         (s/conformer seq)
+         (s/cat :hash #{"#"}
+                :colour (s/+ (set "0123456789abcdef")))))
+
+(s/def ::colours
+  ; Colours associated with tile statuses
+  (s/keys keyword? ::colour))
+
+(s/def ::hex-shade
+  ; Amount of shading applied to the tile colour
+  ::unit-interval)
 
 (s/def ::inner-hex-size
   ; Size of tile's inner hexagon as a fraction of the outer hexagon's size
@@ -66,7 +75,9 @@
   ::pos-int)
 
 (s/def ::tile-config
-  (s/keys :opt-un [::inner-hex-size
+  (s/keys :opt-un [::colours
+                   ::hex-shade
+                   ::inner-hex-size
                    ::radius
                    ::spacing
                    ::stroke-width]))
