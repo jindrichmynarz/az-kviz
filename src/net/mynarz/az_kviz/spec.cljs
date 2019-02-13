@@ -1,6 +1,9 @@
 (ns net.mynarz.az-kviz.spec
   (:require [cljs.spec.alpha :as s]))
 
+(s/def ::non-negative-int
+  (s/and integer? (complement neg?)))
+
 (s/def ::pos-int
   ; Positive whole number
   (s/and integer? pos?))
@@ -17,12 +20,13 @@
   ; Number of tiles per side of a board
   ::pos-int)
 
-(s/def ::coord
-  (s/and integer? (complement neg?)))
+(s/def ::coord ::non-negative-int)
 
 (s/def ::coords
   ; [x, y] coordinates
   (s/tuple ::coord ::coord))
+
+(s/def ::id ::non-negative-int)
 
 (s/def ::status
   ; Status of a tile
@@ -34,6 +38,7 @@
 
 (s/def ::tile
   (s/keys :req-un [::coords
+                   ::id
                    ::status
                    ::text]))
 
@@ -62,6 +67,11 @@
   ; Size of tile's inner hexagon as a fraction of the outer hexagon's size
   ::unit-interval)
 
+(s/def ::on-click
+  ; Function to handle clicks on tiles. Get tile ID as an argument.
+  (s/fspec :args (s/cat :id ::id)
+           :ret nil?))
+
 (s/def ::radius
   ; Radius from a tile centre to its edge
   ::pos-num)
@@ -78,6 +88,7 @@
   (s/keys :opt-un [::colours
                    ::hex-shade
                    ::inner-hex-size
+                   ::on-click
                    ::radius
                    ::spacing
                    ::stroke-width]))
