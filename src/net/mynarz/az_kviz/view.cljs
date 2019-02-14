@@ -20,7 +20,7 @@
                            :player-2 "#354d65"}
                  :hex-shade 0.8
                  :inner-hex-size 0.87
-                 :on-click js/console.log
+                 :on-click (fn [_])
                  :radius 35
                  :spacing 0.05
                  :stroke-width 1}})
