@@ -190,9 +190,6 @@
         make-tile (partial tile on-click)]
     (fn [_ state]
       (adapt/inject-element-attribs
-        [:svg#az-kviz {:x 0
-                       :y 0
-                       :width board-width
-                       :height board-height}
+        [:svg#az-kviz {:viewBox [0 0 board-width board-height]}
          [:defs drop-shadow gradients]
          (map make-tile tiles state)]))))
