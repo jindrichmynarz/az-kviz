@@ -9,8 +9,7 @@
                  [thi.ng/math "0.2.2"]
                  [thi.ng/color "1.3.0"]
                  [thi.ng/geom "1.0.0-RC3"]]
-  :plugins [[lein-cljsbuild "1.1.7"]
-            [lein-figwheel "0.5.18"]]
+  :plugins [[lein-cljsbuild "1.1.7"]]
   :clean-targets ^{:protect false}
   [:target-path
    [:cljsbuild :builds :app :compiler :output-dir]
@@ -26,10 +25,10 @@
                         {:main "net.mynarz.az-kviz.dev"
                          :output-to "public/js/app.js"
                          :output-dir "public/js/out"
-                         :asset-path   "js/out"
+                         :asset-path "js/out"
                          :source-map true
                          :optimizations :none
-                         :pretty-print  true}
+                         :pretty-print true}
                         :figwheel
                         {:on-jsload "net.mynarz.az-kviz.core/mount-root"
                          :open-urls ["http://localhost:3449/index.html"]}}
@@ -38,13 +37,27 @@
                         :compiler
                         {:output-to "public/js/app.js"
                          :output-dir "public/js/release"
-                         :asset-path   "js/out"
+                         :asset-path "js/out"
                          :optimizations :advanced
                          :infer-externs true
-                         :pretty-print false}}}}
-  :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"]]}
+                         :pretty-print false}}
+                       :test
+                       {:source-paths ["src" "test"]
+                        :compiler
+                        {:asset-path "js/test"
+                         :main net.mynarz.az-kviz.runner
+                         :output-to "public/js/test.js"
+                         :output-dir "public/js/test"
+                         :optimizations :none
+                         :pretty-print true}}}}
+  :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"]]
+            "test" ["doo" "chrome" "test"]}
   :profiles {:dev {:source-paths ["src" "env/dev/clj"]
                    :dependencies [[binaryage/devtools "0.9.10"]
                                   [figwheel-sidecar "0.5.18"]
                                   [nrepl "0.6.0"]
-                                  [cider/piggieback "0.4.0"]]}})
+                                  [cider/piggieback "0.4.0"]
+                                  [org.clojure/test.check "0.9.0"]]
+                   :plugins [[lein-doo "0.1.10"]
+                             [lein-figwheel "0.5.18"]
+                             [lein-figwheel "0.5.18"]]}})
