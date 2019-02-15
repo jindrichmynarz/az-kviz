@@ -28,6 +28,12 @@
 
 (s/def ::id ::non-negative-int)
 
+(s/def ::neighbours
+  (s/coll-of ::coords :kind set?))
+
+(s/def ::sides
+  (s/coll-of #{:a :b :c} :kind set?))
+
 (s/def ::status
   ; Status of a tile
   keyword?)
@@ -39,6 +45,8 @@
 (s/def ::tile
   (s/keys :req-un [::coords
                    ::id
+                   ::neighbours
+                   ::sides
                    ::status
                    ::text]))
 
@@ -103,3 +111,6 @@
   ; We don't go into the details, any vector will do.
   (s/coll-of ::any
              :kind vector?))
+
+(s/def ::player
+  #{:player-1 :player-2})
