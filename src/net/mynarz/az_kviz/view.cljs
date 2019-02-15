@@ -117,7 +117,9 @@
      [svg/polygon inner
                   {:class "inner"
                    :fill inner-fill}]
-     [svg/text center text {:font-size font-size}]]))
+     [svg/text center
+               text
+               {:font-size font-size}]]))
 
 (defn- status-gradients
   "Generate SVG gradients for the given `status` and `colour`.
