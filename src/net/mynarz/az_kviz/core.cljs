@@ -13,9 +13,15 @@
             (/ (* n (inc n)) 2))
           (row [y length]
             (map vector (range length) (repeat y)))
-          (tile [id coords]
+          (get-sides [side [x y]]
+            (cond-> #{}
+              (zero? x) (conj :a)
+              (= x y) (conj :b)
+              (= y side) (conj :c)))
+          (tile [side id coords]
             {:coords coords
              :id id
+             :sides (get-sides side coords)
              :status :default
              :text (-> id inc str)})]
     (fn [side]
@@ -25,7 +31,7 @@
                         (range 1)
                         (map-indexed row)
                         (apply concat))]
-        (mapv tile indices points)))))
+        (mapv (partial tile side) indices points)))))
 
 ; What is below is just to preview the components
 
