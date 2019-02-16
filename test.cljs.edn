@@ -10,5 +10,6 @@
               "--disable-gpu"
               "--repl"
               :open-url]
+  :ring-server-options {:port 9501}
   }
 {:main net.mynarz.az-kviz.runner}
