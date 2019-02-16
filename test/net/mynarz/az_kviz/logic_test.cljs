@@ -49,6 +49,11 @@
                 :player-1 :player-2 :player-2
                 :player-2 :player-2 :player-1 :player-1]))
 
+(deftest in-board?
+  (are [side coord pred] (pred (logic/in-board? side coord))
+       3 [2 2] true?
+       3 [3 3] false?))
+
 (deftest owns-all-sides?
   (letfn [(by-player [player board]
             (filter (comp #{player} :status) board))]
@@ -61,7 +66,7 @@
           board-3-no-player :player-1
           board-3-no-player :player-2)))
 
-#_(deftest player-won?
+(deftest player-won?
    (testing "if player won"
      (are [board winner] (logic/player-won? winner board)
           board-3-player-1 :player-1
