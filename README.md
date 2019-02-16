@@ -6,6 +6,8 @@
 
 Include as a dependency: `[net.mynarz.az-kviz "0.1.0"]`
 
+Copy `resources/public/css/style.css` to your project's CSS folder for the base design.
+
 Require the component `net.mynarz.az-kviz.view/board`. When you call it, you need to provide it two arguments: configuration and board state.
 
 The configuration allows you to customize how the boards looks and behaves. You can see the default values of the configuration in `net.mynarz.az-kviz.view/board-config`. The most important of it is `[:tile-config :on-click]`, where you can provide a function that handles clicks on the board tiles. The function's argument is the ID of the clicked tile, which corresponds to the tile's index in the board state.
