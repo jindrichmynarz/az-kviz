@@ -100,14 +100,24 @@
        true?))
 
 (s/fdef player-won?
-        :args (s/cat :player ::spec/player
-                     :board-state ::spec/board-state)
+        :args (s/cat :board-state ::spec/board-state
+                     :player ::spec/player)
         :ret boolean?)
 (defn player-won?
   "Given a `board-state` test if `player` has won the game."
-  [player board-state]
+  [board-state player]
   (let [owned-tiles (filter (comp #{player} :status) board-state)
         side (util/triangle-size->side (count board-state))]
     (and (<= side (count owned-tiles))
          (owns-all-sides? owned-tiles)
          (all-sides-connected? owned-tiles))))
+
+(s/fdef who-won
+        :args (s/cat :board-state ::spec/board-state)
+        :ret (s/nilable ::spec/player))
+(defn who-won
+  "Given a `board-state`, return the player who won or nil when there is no winner."
+  [board-state]
+  (->> [:player-1 :player-2]
+       (filter (partial player-won? board-state))
+       first))

@@ -66,16 +66,21 @@
           board-3-no-player :player-1
           board-3-no-player :player-2)))
 
-(deftest player-won?
+(deftest who-won
    (testing "if player won"
-     (are [board winner won?] (won? (logic/player-won? winner board))
-          board-3-player-1 :player-1 true?
-          board-3-player-1 :player-2 false?
-          board-3-player-2 :player-2 true?
-          board-3-player-2 :player-1 false?
-          board-3-no-player :player-1 false?
-          board-3-no-player :player-2 false?
-          board-4-player-1 :player-1 true?
-          board-4-player-1 :player-2 false?
-          board-4-player-2 :player-2 true?
-          board-4-player-2 :player-1 false?)))
+     (are [board winner] (= (logic/who-won board) winner)
+          board-3-player-1 :player-1 
+          board-3-player-2 :player-2
+          board-4-player-1 :player-1
+          board-4-player-2 :player-2))
+   (testing "if player did not win"
+     (are [board loser] (not= (logic/who-won board) loser)
+          board-3-player-1 :player-2
+          board-3-player-2 :player-1
+          board-3-no-player :player-1
+          board-3-no-player :player-2
+          board-4-player-1 :player-2
+          board-4-player-2 :player-1))
+   (testing "when nobody won"
+     (are [board] (nil? (logic/who-won board))
+          board-3-no-player)))
