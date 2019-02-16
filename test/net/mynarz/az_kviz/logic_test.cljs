@@ -10,6 +10,7 @@
 (ts/instrument)
 
 (defn- init-board
+  "Initialize a game board with `side` length."
   [side]
   (mapv merge
         (logic/init-board-data side)
@@ -72,4 +73,4 @@
           board-3-player-1 :player-1
           board-3-player-2 :player-2
           board-4-player-1 :player-1
-          board-4-player-1 :player-2)))
+          board-4-player-2 :player-2)))
