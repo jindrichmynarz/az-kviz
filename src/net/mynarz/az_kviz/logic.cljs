@@ -96,7 +96,8 @@
   [tiles]
   (->> tiles
        (filter (comp seq :sides))
-       (some (partial all-sides-connected-from-tile? tiles))))
+       (some (partial all-sides-connected-from-tile? tiles))
+       true?))
 
 (s/fdef player-won?
         :args (s/cat :player ::spec/player
