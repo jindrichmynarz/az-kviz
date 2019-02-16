@@ -67,10 +67,12 @@
        (= #{:a :b :c})))
 
 (defn coords->tile
+  "Look up tile by its `coords` in `tiles`."
   [tiles coords]
   (first (filter (comp #{coords} :coords) tiles)))
 
-(defn reaches-all-sides?
+(defn all-sides-connected-from-tile?
+  "Test if `tiles` connect all sides of the board, starting from `tile`."
   [tiles tile]
   (let [owns? (->> tiles
                    (map :coords)
@@ -90,10 +92,11 @@
                             (into (rest coords-to-visit))))))))))
 
 (defn all-sides-connected?
+  "Test if `tiles` connect all sides of the board."
   [tiles]
   (->> tiles
        (filter (comp seq :sides))
-       (some (partial reaches-all-sides? tiles))))
+       (some (partial all-sides-connected-from-tile? tiles))))
 
 (s/fdef player-won?
         :args (s/cat :player ::spec/player
