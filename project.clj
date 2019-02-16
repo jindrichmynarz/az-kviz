@@ -11,11 +11,13 @@
                  [thi.ng/geom "1.0.0-RC3"]]
   :source-paths ["src"]
   :aliases {"fig"       ["trampoline" "run" "-m" "figwheel.main"]
-            "fig:build" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]
+            "fig:build" ["trampoline" "run" "-m" "figwheel.main" "--build" "dev" "--repl"]
             "fig:min"   ["run" "-m" "figwheel.main" "-O" "advanced" "-bo" "dev"]
-            "fig:test"  ["run" "-m" "figwheel.main" "-co" "test.cljs.edn" "-m" net.mynarz.az-kviz.runner]}
-  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]
+            "fig:test"  ["trampoline" "run" "-m" "figwheel.main" "--build" "test" "--serve"]} 
+  :profiles {:dev {:clean-targets ^{:protect false} ["target"]
+                   :dependencies [[binaryage/devtools "0.9.10"]
+                                  [com.bhauman/cljs-test-display "0.1.1"]
                                   [com.bhauman/figwheel-main "0.2.0"]
                                   [com.bhauman/rebel-readline-cljs "0.1.4"]
-                                  [com.bhauman/cljs-test-display "0.1.1"]
-                                  [org.clojure/test.check "0.9.0"]]}})
+                                  [org.clojure/test.check "0.9.0"]]
+                   :resource-paths ["target"]}})

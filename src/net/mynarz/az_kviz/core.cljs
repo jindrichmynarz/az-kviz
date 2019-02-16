@@ -38,7 +38,8 @@
 
 (defn mount-root
   []
-  (r/render [wrapper] (.getElementById js/document "app")))
+  (when-let [root (.getElementById js/document "app")]
+    (r/render [wrapper] root)))
 
 ;; conditionally start your application based on the presence of an "app" element
 ;; this is particularly helpful for testing this ns without launching the app
