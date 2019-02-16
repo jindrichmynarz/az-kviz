@@ -1,5 +1,7 @@
 (ns net.mynarz.az-kviz.view
-  (:require [net.mynarz.az-kviz.spec :as spec]
+  (:require [net.mynarz.az-kviz.logic :as logic]
+            [net.mynarz.az-kviz.spec :as spec]
+            [net.mynarz.az-kviz.util :as util]
             [cljs.spec.alpha :as s]
             [goog.string.format]
             [thi.ng.color.core :as color]
@@ -47,13 +49,6 @@
 
 ; ----- Private functions -----
 
-(defn- deep-merge
-  "Deep merge `maps`."
-  [& maps]
-  (if (every? map? maps)
-    (apply merge-with deep-merge maps)
-    (last maps)))
-
 (defn- lighten
   "Lighten a CSS `colour`, such as #ff69b4, by `amount` from [0, 1]."
   [colour amount]
@@ -94,15 +89,14 @@
 
 (defn- tile
   "An AZ-kvíz tile.
-  `on-click` is a function handling click events that receive tile ID as the argument.
   `center` are the [x y] coordinates of the tile.
   `inner` is the collection of [x y] points for the inner hexagon.
+  `on-click` is a function handling click events that receive tile ID as the argument.
   `outer` is the collection of [x y] points for the outer hexagon.
   `radius` is the tile radius from its centre to its edge.
   `status` is the state of the tile as a keyword.
   `text` is the text to show in the tile."
-  [on-click
-   {:keys [center id inner outer radius]}
+  [{:keys [center id inner on-click outer radius]}
    {:keys [status text]}]
   (let [outer-fill (format "url(#%s-outer)" (name status))
         inner-fill (format "url(#%s-inner)" (name status))
@@ -143,7 +137,7 @@
         :ret (s/fspec :args ::board-args
                       :ret ::spec/hiccup))
 (defn board
-  [config state]
+  [config _]
   (let [{{r :radius
           :keys [colours
                  hex-shade
@@ -152,7 +146,7 @@
                  spacing
                  stroke-width]} :tile-config
          n :side} (if (seq config)
-                    (deep-merge board-config config)
+                    (util/deep-merge board-config config)
                     board-config)
         padding r ; Radius as padding
         inner-r (* r inner-hex-size) ; Tile's inner hexagon's radius
@@ -185,13 +179,13 @@
                         {:center center
                          :id id
                          :inner (hexagon inner-r center)
+                         :on-click on-click
                          :outer (hexagon r center)
                          :radius r}))
-        tiles (map tile-points state)
-        gradients (mapcat (partial status-gradients hex-shade) colours)
-        make-tile (partial tile on-click)]
+        board-data (map tile-points (logic/init-board-data n))
+        gradients (mapcat (partial status-gradients hex-shade) colours)]
     (fn [_ state]
       (adapt/inject-element-attribs
         [:svg#az-kviz {:viewBox [0 0 board-width board-height]}
          [:defs drop-shadow gradients]
-         (map make-tile tiles state)]))))
+         (map tile board-data state)]))))
