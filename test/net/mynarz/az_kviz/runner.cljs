@@ -1,7 +1,10 @@
+;; This test runner is intended to be run from the command line
 (ns net.mynarz.az-kviz.runner
   (:require [net.mynarz.az-kviz.core-test]
-            [doo.runner :refer-macros [doo-tests]]))
+            [figwheel.main.testing :refer-macros [run-tests-async]]))
 
 (enable-console-print!)
 
-(doo-tests 'net.mynarz.az-kviz.core-test)
+(defn -main
+  [& args]
+  (run-tests-async 10000))

@@ -65,7 +65,7 @@
           board-3-no-player :player-1
           board-3-no-player :player-2)))
 
-(deftest player-won?
+#_(deftest player-won?
    (testing "if player won"
      (are [board winner] (core/player-won? winner board)
           board-3-player-1 :player-1

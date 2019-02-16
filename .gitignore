@@ -16,3 +16,4 @@ pom.xml.asc
 /.env
 .rebel_readline_history
 scratchpad.cljs
+resources/public/cljs-out

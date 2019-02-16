@@ -146,6 +146,13 @@
   []
   (r/render [wrapper] (.getElementById js/document "app")))
 
-(defn init!
-  []
+;; conditionally start your application based on the presence of an "app" element
+;; this is particularly helpful for testing this ns without launching the app
+(mount-root)
+
+;; specify reload hook with ^;after-load metadata
+(defn ^:after-load on-reload []
   (mount-root))
+  ;; optionally touch your app-state to force rerendering depending on
+  ;; your application
+  ;; (swap! app-state update-in [:__figwheel_counter] inc)
