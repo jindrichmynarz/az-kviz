@@ -9,17 +9,23 @@
 
 (ts/instrument)
 
+(defn- init-board
+  [side]
+  (mapv merge
+        (logic/init-board-data side)
+        (core/init-board-state side)))
+
 (defn- board-state
-  "Get the state of board with `side` where `statuses` are set."
+  "Get the state of board with `statuses` set."
   [statuses]
   (let [side (util/triangle-size->side (count statuses))]
     (assert (integer? side) "Invalid number of statuses. Cannot create a board.")
     (mapv (fn [tile status] (assoc tile :status status))
-          (core/init-board-state side)
+          (init-board side)
           statuses)))
 
 (def board-3-no-player
-  (core/init-board-state 3))
+  (init-board 3))
 
 (def board-3-player-1
   (board-state [:player-1
