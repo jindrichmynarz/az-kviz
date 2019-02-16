@@ -11,8 +11,7 @@
                  [thi.ng/geom "1.0.0-RC3"]]
   :source-paths ["src"]
   :aliases {"fig"       ["trampoline" "run" "-m" "figwheel.main"]
-            "fig:build" ["trampoline" "run" "-m" "figwheel.main" "--build" "dev" "--repl"]
-            "fig:min"   ["run" "-m" "figwheel.main" "-O" "advanced" "-bo" "dev"]
+            "fig:dev"   ["trampoline" "run" "-m" "figwheel.main" "--build" "dev" "--repl"]
             "fig:test"  ["trampoline" "run" "-m" "figwheel.main" "--build" "test" "--serve"]} 
   :profiles {:dev {:clean-targets ^{:protect false} ["target"]
                    :dependencies [[binaryage/devtools "0.9.10"]
