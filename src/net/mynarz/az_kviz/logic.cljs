@@ -8,18 +8,18 @@
   "Given a board with `side` length,
   test if coordinate [x y] is in the board."
   [side [x y]]
-  (and (<= x y)
-       (<= 0 x side)
-       (<= 0 y side)))
+  (letfn [(in? [coord] (and (>= coord 0) (< coord side)))]
+    (and (<= x y)
+         (in? x)
+         (in? y))))
 
 (def neighbours
   "Given a board with `side` length,
   return neighbours of coordinate `coords`."
-  (let [possible-offsets [[-1 -1] [0 -1] [1 0] [0 1] [1 1] [-1 0]]
-        offset (partial mapv +)]
+  (let [possible-offsets [[-1 -1] [0 -1] [1 0] [0 1] [1 1] [-1 0]]]
     (fn [side coords]
       (->> possible-offsets
-           (map (partial offset coords))
+           (map (partial mapv + coords))
            (filter (partial in-board? side))
            (into #{})))))
 
