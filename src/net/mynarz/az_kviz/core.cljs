@@ -7,21 +7,24 @@
             [reagent.core :as r]))
 
 (s/fdef init-board-state
-        :args (s/cat :side ::spec/side)
+        :args (s/alt :default (s/cat)
+                     :side (s/cat :side ::spec/side))
         :ret ::spec/board-state)
 (def init-board-state
   "Get an initial board state for board with `side` length."
   (let [->tile (comp (partial assoc {:status :default} :text) str inc)]
-    (fn [side]
-      (->> side
-           util/triangular-number
-           range
-           (mapv ->tile)))))
+    (fn ([]
+         (init-board-state 7))
+        ([side]
+         (->> side
+              util/triangular-number
+              range
+              (mapv ->tile))))))
 
 ; What is below is just to preview the components
 
 (def state
-  (r/atom (init-board-state 7)))
+  (r/atom (init-board-state)))
 
 ;; -------------------------
 ;; Views
