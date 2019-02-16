@@ -1,7 +1,6 @@
 (ns net.mynarz.az-kviz.logic-test
   (:require [net.mynarz.az-kviz.core :as core]
             [net.mynarz.az-kviz.logic :as logic]
-            [net.mynarz.az-kviz.spec :as spec]
             [net.mynarz.az-kviz.util :as util]
             [cljs.spec.alpha :as s]
             [cljs.spec.test.alpha :as ts]
@@ -69,8 +68,14 @@
 
 (deftest player-won?
    (testing "if player won"
-     (are [board winner] (logic/player-won? winner board)
-          board-3-player-1 :player-1
-          board-3-player-2 :player-2
-          board-4-player-1 :player-1
-          board-4-player-2 :player-2)))
+     (are [board winner won?] (won? (logic/player-won? winner board))
+          board-3-player-1 :player-1 true?
+          board-3-player-1 :player-2 false?
+          board-3-player-2 :player-2 true?
+          board-3-player-2 :player-1 false?
+          board-3-no-player :player-1 false?
+          board-3-no-player :player-2 false?
+          board-4-player-1 :player-1 true?
+          board-4-player-1 :player-2 false?
+          board-4-player-2 :player-2 true?
+          board-4-player-2 :player-1 false?)))
