@@ -95,8 +95,8 @@
   `radius` is the tile radius from its centre to its edge.
   `status` is the state of the tile as a keyword.
   `text` is the text to show in the tile."
-  [{:keys [center id inner outer radius]}
-   {:keys [status text]}]
+  [{:keys [center id inner outer
+           radius status text]}]
   (let [outer-fill (format "url(#%s-outer)" (name status))
         inner-fill (format "url(#%s-inner)" (name status))
         font-size (if (< (count text) 3) radius (* radius (/ 2 3)))
@@ -136,7 +136,7 @@
         :ret (s/fspec :args ::board-args
                       :ret ::spec/hiccup))
 (defn board
-  [config _]
+  [config state]
   (let [{{r :radius
           :keys [colours
                  hex-shade
@@ -180,7 +180,7 @@
                          :inner (hexagon inner-r center)
                          :outer (hexagon r center)
                          :radius r}))
-        board-data (map tile-points (logic/init-board-data n))
+        board-data (map tile-points state)
         gradients (mapcat (partial status-gradients hex-shade) colours)
         click-handler (fn [e]
                         (when-let [tile (.closest (.-target e) "g.tile")]
@@ -190,4 +190,4 @@
         [:svg#az-kviz {:on-click click-handler
                        :viewBox [0 0 board-width board-height]}
          [:defs drop-shadow gradients]
-         (map tile board-data state)]))))
+         (map (comp tile merge) board-data state)]))))

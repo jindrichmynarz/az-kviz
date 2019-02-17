@@ -18,10 +18,11 @@
   return neighbours of coordinate `coords`."
   (let [possible-offsets [[-1 -1] [0 -1] [1 0] [0 1] [1 1] [-1 0]]]
     (fn [side coords]
-      (->> possible-offsets
-           (map (partial mapv + coords))
-           (filter (partial in-board? side))
-           (into #{})))))
+      (when (in-board? side coords)
+        (->> possible-offsets
+             (map (partial mapv + coords))
+             (filter (partial in-board? side))
+             (into #{}))))))
 
 (defn sides
   "Given a board with `side` length,
@@ -32,31 +33,37 @@
     (= x y) (conj :b)
     (= y (dec side)) (conj :c)))
 
-(defn init-tile-data
-  "Initialize data of a tile in a board with `side` length,
+(defn init-tile-state
+  "Initialize state of a tile in a board with `side` length,
   The tile has `id` and is located as `coords`."
   [side id coords]
   {:coords coords
    :id id
    :neighbours (neighbours side coords)
-   :sides (sides side coords)})
+   :sides (sides side coords)
+   :status :default
+   :text (-> id inc str)})
 
-(s/fdef init-board-data
-        :args (s/cat :side ::spec/side)
+(s/fdef init-board-state
+        :args (s/? ::spec/side)
         :ret ::spec/board-state)
-(def init-board-data
-  "Initialize the data for board with `side` length."
+(def init-board-state
+  "Initialize the data for board with `side` length.
+  Defaults to side lenght = 7, just like in AZ-kvíz."
   (letfn [(row [y length]
-            (map vector (range length) (repeat y)))
-          (neighbours [side [x y]])]
-    (fn [side]
-      (let [size (util/triangular-number side)
-            ids (range size)
-            coords (->> (inc size)
-                        (range 1)
-                        (map-indexed row)
-                        (apply concat))]
-        (mapv (partial init-tile-data side) ids coords)))))
+            (map vector (range length) (repeat y)))]
+    (fn ([]
+         (init-board-state 7))
+        ([side]
+         (let [size (util/triangular-number side)
+               ids (range size)
+               coords (->> (inc size)
+                           (range 1)
+                           (map-indexed row)
+                           (apply concat))]
+           (mapv (partial init-tile-state side)
+                 ids
+                 coords))))))
 
 (defn owns-all-sides?
   "Test if played owning `tiles` reached all sides of the board."

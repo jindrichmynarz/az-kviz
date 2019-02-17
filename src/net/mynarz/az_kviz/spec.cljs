@@ -42,25 +42,17 @@
   ; Tile text, recommended to be max 4 characters
   (s/and string? (comp (partial >= 4) count)))
 
-(s/def ::tile-data
+(s/def ::tile-state
   (s/keys :req-un [::coords
                    ::id
                    ::neighbours
-                   ::sides]))
-
-(s/def ::tile-state
-  (s/keys :req-un [::status
+                   ::sides
+                   ::status
                    ::text]))
-
-(s/def ::board-data
-  (s/coll-of ::tile-data
-             :min-count 1))
 
 (s/def ::board-state
   ; State of an AZ-kvíz board
-  (s/coll-of ::tile-state
-             :kind vector?
-             :min-count 1))
+  (s/coll-of ::tile-state :min-count 1))
 
 (s/def ::colour
   (s/and string?

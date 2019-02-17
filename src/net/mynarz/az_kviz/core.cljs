@@ -1,39 +1,21 @@
 (ns net.mynarz.az-kviz.core
   (:require [net.mynarz.az-kviz.logic :as logic]
-            [net.mynarz.az-kviz.spec :as spec]
-            [net.mynarz.az-kviz.util :as util] 
             [net.mynarz.az-kviz.view :refer [board]]
-            [cljs.spec.alpha :as s]
             [reagent.core :as r]))
-
-(s/fdef init-board-state
-        :args (s/alt :default (s/cat)
-                     :side (s/cat :side ::spec/side))
-        :ret ::spec/board-state)
-(def init-board-state
-  "Get an initial board state for board with `side` length."
-  (let [->tile (comp (partial assoc {:status :default} :text) str inc)]
-    (fn ([]
-         (init-board-state 7))
-        ([side]
-         (->> side
-              util/triangular-number
-              range
-              (mapv ->tile))))))
 
 ; What is below is just to preview the components
 
 (def state
-  (r/atom (init-board-state)))
+  (r/atom (logic/init-board-state)))
 
 ;; -------------------------
 ;; Views
 
 (defn wrapper
   []
-  [board {:tile-config {:on-click (fn [id]
-                                    (swap! state assoc-in [id :status] :player-1)
-                                    (js/console.log (logic/player-won? :player-1 @state)))}}
+  [board {:on-click (fn [id]
+                      (swap! state assoc-in [id :status] :player-1)
+                      (js/console.log (logic/who-won @state)))}
          @state])
 
 ;; -------------------------
