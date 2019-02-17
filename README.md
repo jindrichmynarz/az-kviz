@@ -10,9 +10,11 @@ Copy `resources/public/css/style.css` to your project's CSS folder for the base 
 
 Require the component `net.mynarz.az-kviz.view/board`. When you call it, you need to provide it two arguments: configuration and board state.
 
-The configuration allows you to customize how the boards looks and behaves. You can see the default values of the configuration in `net.mynarz.az-kviz.view/board-config`. The most important of it is `[:tile-config :on-click]`, where you can provide a function that handles clicks on the board tiles. The function's argument is the ID of the clicked tile, which corresponds to the tile's index in the board state.
+The configuration allows you to customize how the boards looks and behaves. You can see the default values of the configuration in `net.mynarz.az-kviz.view/board-config`. The most important of it is `:on-click`, where you can provide a function that handles clicks on the board tiles. The function's argument is the ID of the clicked tile, which corresponds to the tile's index in the board state.
 
-The board state represents the state of a game. You can get an initial board state by `net.mynarz.az-kviz.core/init-board-state`, and probably store it in a Reagent atom. The board state is a collection of tile states, each tracking the tile's `:status` and `:text` the tile shows.
+The board state represents the state of a game. You can get an initial board state by `net.mynarz.az-kviz.logic/init-board-state`, and probably store it in a Reagent atom. The board state is a vector of tile states, each tracking the tile's `:status` and the `:text` shown.
+
+To determine a game's winner, call `net.mynarz.az-kviz.logic/who-won` on the board state.
 
 ## Development
 
