@@ -12,7 +12,8 @@
 ; ----- Default configuration -----
 
 (def board-config
-  {:side 7
+  {:on-click (fn [_])
+   :side 7
    :tile-config {:colours {:active "#dedede"
                            :default "#ccc"
                            :hover "#dedede"
@@ -22,7 +23,6 @@
                            :player-2 "#354d65"}
                  :hex-shade 0.8
                  :inner-hex-size 0.87
-                 :on-click (fn [_])
                  :radius 35
                  :spacing 0.05
                  :stroke-width 1}})
@@ -91,20 +91,19 @@
   "An AZ-kvíz tile.
   `center` are the [x y] coordinates of the tile.
   `inner` is the collection of [x y] points for the inner hexagon.
-  `on-click` is a function handling click events that receive tile ID as the argument.
   `outer` is the collection of [x y] points for the outer hexagon.
   `radius` is the tile radius from its centre to its edge.
   `status` is the state of the tile as a keyword.
   `text` is the text to show in the tile."
-  [{:keys [center id inner on-click outer radius]}
+  [{:keys [center id inner outer radius]}
    {:keys [status text]}]
   (let [outer-fill (format "url(#%s-outer)" (name status))
         inner-fill (format "url(#%s-inner)" (name status))
         font-size (if (< (count text) 3) radius (* radius (/ 2 3)))
         available? (= status :default)
         classes (cond-> ["tile"] available? (conj "available"))]
-    [svg/group (cond-> {:class classes}
-                  available? (assoc :on-click (fn [_] (on-click id))))
+    [svg/group {:id id
+                :class classes}
      [svg/polygon outer 
                   {:class "outer"
                    :fill outer-fill}]
@@ -142,9 +141,9 @@
           :keys [colours
                  hex-shade
                  inner-hex-size
-                 on-click
                  spacing
                  stroke-width]} :tile-config
+         :keys [on-click]
          n :side} (if (seq config)
                     (util/deep-merge board-config config)
                     board-config)
@@ -179,13 +178,16 @@
                         {:center center
                          :id id
                          :inner (hexagon inner-r center)
-                         :on-click on-click
                          :outer (hexagon r center)
                          :radius r}))
         board-data (map tile-points (logic/init-board-data n))
-        gradients (mapcat (partial status-gradients hex-shade) colours)]
+        gradients (mapcat (partial status-gradients hex-shade) colours)
+        click-handler (fn [e]
+                        (when-let [tile (.closest (.-target e) "g.tile")]
+                          (on-click (js/parseInt (.-id tile)))))]
     (fn [_ state]
       (adapt/inject-element-attribs
-        [:svg#az-kviz {:viewBox [0 0 board-width board-height]}
+        [:svg#az-kviz {:on-click click-handler
+                       :viewBox [0 0 board-width board-height]}
          [:defs drop-shadow gradients]
          (map tile board-data state)]))))

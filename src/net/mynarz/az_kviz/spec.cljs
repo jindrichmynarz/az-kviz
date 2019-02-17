@@ -102,13 +102,14 @@
   (s/keys :opt-un [::colours
                    ::hex-shade
                    ::inner-hex-size
-                   ::on-click
                    ::radius
                    ::spacing
                    ::stroke-width]))
 
 (s/def ::board-config
-  (s/keys :opt-un [::side ::tile-config]))
+  (s/keys :opt-un [::on-click
+                   ::side
+                   ::tile-config]))
 
 (s/def ::any any?)
 
