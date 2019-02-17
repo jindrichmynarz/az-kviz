@@ -1,6 +1,5 @@
 (ns net.mynarz.az-kviz.logic-test
-  (:require [net.mynarz.az-kviz.core :as core]
-            [net.mynarz.az-kviz.logic :as logic]
+  (:require [net.mynarz.az-kviz.logic :as logic]
             [net.mynarz.az-kviz.util :as util]
             [cljs.spec.alpha :as s]
             [cljs.spec.test.alpha :as ts]
@@ -8,24 +7,17 @@
 
 (ts/instrument)
 
-(defn- init-board
-  "Initialize a game board with `side` length."
-  [side]
-  (mapv merge
-        (logic/init-board-data side)
-        (core/init-board-state side)))
-
 (defn- board-state
   "Get the state of board with `statuses` set."
   [statuses]
   (let [side (util/triangle-size->side (count statuses))]
     (assert (integer? side) "Invalid number of statuses. Cannot create a board.")
     (mapv (fn [tile status] (assoc tile :status status))
-          (init-board side)
+          (logic/init-board-state side)
           statuses)))
 
 (def board-3-no-player
-  (init-board 3))
+  (logic/init-board-state 3))
 
 (def board-3-player-1
   (board-state [:player-1
@@ -53,6 +45,17 @@
   (are [side coord pred] (pred (logic/in-board? side coord))
        3 [2 2] true?
        3 [3 3] false?))
+
+(deftest neighbours
+  (are [side coords expected] (= (logic/neighbours side coords) expected)
+       3 [0 0] #{[0 1] [1 1]}
+       3 [2 3] nil))
+
+(deftest sides
+  (are [side coords expected] (= (logic/sides side coords) expected)
+       3 [0 0] #{:a :b}
+       3 [2 2] #{:b :c}
+       4 [1 2] #{}))
 
 (deftest owns-all-sides?
   (letfn [(by-player [player board]
