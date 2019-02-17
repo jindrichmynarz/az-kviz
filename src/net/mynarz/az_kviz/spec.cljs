@@ -52,7 +52,9 @@
 
 (s/def ::board-state
   ; State of an AZ-kvíz board
-  (s/coll-of ::tile-state :min-count 1))
+  (s/coll-of ::tile-state
+             :min-count 1
+             :kind vector?))
 
 (s/def ::colour
   (s/and string?
