@@ -95,15 +95,16 @@
   `radius` is the tile radius from its centre to its edge.
   `status` is the state of the tile as a keyword.
   `text` is the text to show in the tile."
-  [{:keys [center id inner outer
+  [{:keys [center classes id inner outer
            radius status text]}]
   (let [outer-fill (format "url(#%s-outer)" (name status))
         inner-fill (format "url(#%s-inner)" (name status))
         font-size (if (< (count text) 3) radius (* radius (/ 2 3)))
-        available? (= status :default)
-        classes (cond-> ["tile"] available? (conj "available"))]
+        available? (not (#{:player-1 :player-2} status))
+        all-classes (cond-> (conj classes "tile" (name status))
+                      available? (conj "available"))]
     [svg/group {:id id
-                :class classes}
+                :class all-classes}
      [svg/polygon outer 
                   {:class "outer"
                    :fill outer-fill}]
@@ -183,7 +184,7 @@
         board-data (map tile-points state)
         gradients (mapcat (partial status-gradients hex-shade) colours)
         click-handler (fn [e]
-                        (when-let [tile (.closest (.-target e) "g.tile")]
+                        (when-let [tile (.closest (.-target e) "g.tile.available")]
                           (on-click (js/parseInt (.-id tile)))))]
     (fn [_ state]
       (adapt/inject-element-attribs

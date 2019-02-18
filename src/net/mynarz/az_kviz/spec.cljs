@@ -20,6 +20,9 @@
   ; Number of tiles per side of a board
   ::pos-int)
 
+(s/def ::classes
+  (s/coll-of string? :kind vector?))
+
 (s/def ::coord ::non-negative-int)
 
 (s/def ::coords
@@ -43,7 +46,8 @@
   (s/and string? (comp (partial >= 4) count)))
 
 (s/def ::tile-state
-  (s/keys :req-un [::coords
+  (s/keys :req-un [::classes
+                   ::coords
                    ::id
                    ::neighbours
                    ::sides
