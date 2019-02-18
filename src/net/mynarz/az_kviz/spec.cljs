@@ -21,6 +21,8 @@
   ::pos-int)
 
 (s/def ::classes
+  ; TODO: Perhaps be more specific.
+  ; <https://benfrain.com/when-and-where-you-can-use-numbers-in-id-and-class-names/>
   (s/coll-of string? :kind vector?))
 
 (s/def ::coord ::non-negative-int)
@@ -111,9 +113,13 @@
 
 (s/def ::any any?)
 
-(s/def ::hiccup
+(s/def ::hiccup 
   ; Hiccup representation of HTML
-  ; We don't go into the details, any vector will do.
+  (s/or :string string?
+        :element (s/cat :tag keyword?
+                        :attrs (s/? map?)
+                        :content (s/* ::hiccup)))
+
   (s/coll-of ::any
              :kind vector?))
 
