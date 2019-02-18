@@ -37,7 +37,8 @@
   "Initialize state of a tile in a board with `side` length,
   The tile has `id` and is located as `coords`."
   [side id coords]
-  {:coords coords
+  {:classes []
+   :coords coords
    :id id
    :neighbours (neighbours side coords)
    :sides (sides side coords)
