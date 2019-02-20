@@ -111,17 +111,12 @@
                    ::side
                    ::tile-config]))
 
-(s/def ::any any?)
-
-(s/def ::hiccup 
+(s/def ::hiccup
   ; Hiccup representation of HTML
   (s/or :string string?
         :element (s/cat :tag keyword?
                         :attrs (s/? map?)
-                        :content (s/* ::hiccup)))
-
-  (s/coll-of ::any
-             :kind vector?))
+                        :content (s/* ::hiccup))))
 
 (s/def ::player
   #{:player-1 :player-2})
