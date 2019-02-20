@@ -29,6 +29,16 @@
                 :player-1 :player-1
                 :player-2 :player-2 :player-2]))
 
+(def board-3-any-player
+   (board-state [:player-2
+                 :default :player-2
+                 :default :missed :player-1]))
+
+(def board-3-unwinnable
+  (board-state [:player-2
+                :player-1 :gone
+                :player-1 :gone :player-2]))
+
 (def board-4-player-1
   (board-state [:player-2
                 :player-1 :player-2
@@ -87,3 +97,17 @@
    (testing "when nobody won"
      (are [board] (nil? (logic/who-won board))
           board-3-no-player)))
+
+(deftest can-win?
+  (testing "winnable boards"
+    (are [board player] (logic/can-win? board player)
+         board-3-player-1 :player-1
+         board-3-no-player :player-1
+         board-3-no-player :player-2
+         board-3-any-player :player-1
+         board-3-any-player :player-2))
+  (testing "lost boards"
+    (are [board player] (not (logic/can-win? board player))
+         board-3-player-1 :player-2
+         board-3-unwinnable :player-1
+         board-3-unwinnable :player-2)))

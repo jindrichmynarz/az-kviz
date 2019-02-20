@@ -107,6 +107,14 @@
        (some (partial all-sides-connected-from-tile? tiles))
        true?))
 
+(defn winning-tiles?
+  "Does owning `tiles` in the `board-state` wins the game?"
+  [board-state tiles]
+  (let [side (util/triangle-size->side (count board-state))]
+    (and (<= side (count tiles))
+         (owns-all-sides? tiles)
+         (all-sides-connected? tiles))))
+
 (s/fdef player-won?
         :args (s/cat :board-state ::spec/board-state
                      :player ::spec/player)
@@ -114,11 +122,8 @@
 (defn player-won?
   "Given a `board-state` test if `player` has won the game."
   [board-state player]
-  (let [owned-tiles (filter (comp #{player} :status) board-state)
-        side (util/triangle-size->side (count board-state))]
-    (and (<= side (count owned-tiles))
-         (owns-all-sides? owned-tiles)
-         (all-sides-connected? owned-tiles))))
+  (let [owned-tiles (filter (comp #{player} :status) board-state)]
+    (winning-tiles? board-state owned-tiles)))
 
 (s/fdef who-won
         :args (s/cat :board-state ::spec/board-state)
@@ -129,3 +134,14 @@
   (->> [:player-1 :player-2]
        (filter (partial player-won? board-state))
        first))
+
+(s/fdef can-win?
+        :args (s/cat :board-state ::spec/board-state
+                     :player ::spec/player)
+        :ret boolean?)
+(defn can-win?
+  "Given a `board-state`, test if `player` can still win."
+  [board-state player]
+  (->> board-state
+       (filter (comp #{player :default :missed} :status))
+       (winning-tiles? board-state)))
