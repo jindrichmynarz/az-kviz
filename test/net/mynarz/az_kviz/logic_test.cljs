@@ -16,7 +16,7 @@
           (logic/init-board-state side)
           statuses)))
 
-(def board-3-no-player
+(def board-3-any-player
   (logic/init-board-state 3))
 
 (def board-3-player-1
@@ -29,12 +29,12 @@
                 :player-1 :player-1
                 :player-2 :player-2 :player-2]))
 
-(def board-3-any-player
+(def board-3-any-player-2
    (board-state [:player-2
                  :default :player-2
                  :default :missed :player-1]))
 
-(def board-3-unwinnable
+(def board-3-no-player
   (board-state [:player-2
                 :player-1 :gone
                 :player-1 :gone :player-2]))
@@ -51,6 +51,9 @@
                 :player-1 :player-2 :player-2
                 :player-2 :player-2 :player-1 :player-1]))
 
+(def board-7-any-player
+  (logic/init-board-state 7))
+  
 (deftest in-board?
   (are [side coord pred] (pred (logic/in-board? side coord))
        3 [2 2] true?
@@ -76,8 +79,8 @@
           board-4-player-1 :player-1
           board-4-player-2 :player-2)
     (are [board player] (not (logic/owns-all-sides? (by-player player board)))
-          board-3-no-player :player-1
-          board-3-no-player :player-2)))
+          board-3-any-player :player-1
+          board-3-any-player :player-2)))
 
 (deftest who-won
    (testing "if player won"
@@ -90,24 +93,26 @@
      (are [board loser] (not= (logic/who-won board) loser)
           board-3-player-1 :player-2
           board-3-player-2 :player-1
-          board-3-no-player :player-1
-          board-3-no-player :player-2
+          board-3-any-player :player-1
+          board-3-any-player :player-2
           board-4-player-1 :player-2
           board-4-player-2 :player-1))
    (testing "when nobody won"
      (are [board] (nil? (logic/who-won board))
-          board-3-no-player)))
+          board-3-any-player)))
 
 (deftest can-win?
   (testing "winnable boards"
     (are [board player] (logic/can-win? board player)
          board-3-player-1 :player-1
-         board-3-no-player :player-1
-         board-3-no-player :player-2
          board-3-any-player :player-1
-         board-3-any-player :player-2))
+         board-3-any-player :player-2
+         board-3-any-player-2 :player-1
+         board-3-any-player-2 :player-2
+         board-7-any-player :player-1
+         board-7-any-player :player-2))
   (testing "lost boards"
     (are [board player] (not (logic/can-win? board player))
          board-3-player-1 :player-2
-         board-3-unwinnable :player-1
-         board-3-unwinnable :player-2)))
+         board-3-no-player :player-1
+         board-3-no-player :player-2)))
