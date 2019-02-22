@@ -5,7 +5,7 @@
             [cljs.spec.alpha :as s]
             [goog.string.format]
             [thi.ng.color.core :as color]
-            [thi.ng.geom.svg.adapter :as adapt] 
+            [thi.ng.geom.svg.adapter :as adapt]
             [thi.ng.geom.svg.core :as svg]
             [thi.ng.math.core :as math]))
 
@@ -44,8 +44,15 @@
   [:filter#drop-shadow
    [:feDropShadow {:dx 1
                    :dy 1
-                   :floodColor "#0000080"
+                   :floodColor "#000"
                    :stdDeviation 2}]])
+
+(def white-etch
+  [:filter#white-etch
+   [:feDropShadow {:dx 0
+                   :dy 2
+                   :floodColor "#fff"
+                   :stdDeviation 0}]])
 
 ; ----- Private functions -----
 
@@ -105,15 +112,11 @@
                       available? (conj "available"))]
     [svg/group {:id id
                 :class all-classes}
-     [svg/polygon outer 
-                  {:class "outer"
-                   :fill outer-fill}]
-     [svg/polygon inner
-                  {:class "inner"
-                   :fill inner-fill}]
-     [svg/text center
-               text
-               {:font-size font-size}]]))
+     [svg/polygon outer {:class "outer"
+                         :fill outer-fill}]
+     [svg/polygon inner {:class "inner"
+                         :fill inner-fill}]
+     [svg/text center text {:font-size font-size}]]))
 
 (defn- status-gradients
   "Generate SVG gradients for the given `status` and `colour`.
@@ -123,7 +126,7 @@
         end [100 (lighten colour hex-shade)]
         gradient (fn [status suffix attrs]
                    (let [id (str (name status) suffix)]
-                     (svg/linear-gradient id attrs start end)))] 
+                     (svg/linear-gradient id attrs start end)))]
     [(gradient status "-inner" {:x1 0 :x2 0 :y1 0 :y2 1})
      (gradient status "-outer" {:x1 0 :x2 0 :y1 1 :y2 0})]))
 
@@ -190,5 +193,5 @@
       (adapt/inject-element-attribs
         [:svg#az-kviz {:on-click click-handler
                        :viewBox [0 0 board-width board-height]}
-         [:defs drop-shadow gradients]
+         [:defs drop-shadow white-etch gradients]
          (map (comp tile merge) board-data state)]))))
