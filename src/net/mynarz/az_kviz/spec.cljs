@@ -71,7 +71,7 @@
 
 (s/def ::colours
   ; Colours associated with tile statuses
-  (s/keys keyword? ::colour))
+  (s/map-of keyword? (s/coll-of ::colour)))
 
 (s/def ::hex-shade
   ; Amount of shading applied to the tile colour
