@@ -1,4 +1,4 @@
-(defproject net.mynarz.az-kviz "0.1.0-SNAPSHOT"
+(defproject net.mynarz.az-kviz "0.1.0"
   :description "Reagent component for the AZ-kvíz board"
   :url "https://github.com/jindrichmynarz/az-kviz"
   :license {:name "Eclipse Public License"
