@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand:700&subset=latin-ext');
 
 body {
-  font-family: Quicksand, 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
   max-width: 600px;
   margin: 0 auto;
   padding-top: 72px;
@@ -15,29 +14,27 @@ body {
   font-family: Quicksand, Arial, sans-serif;
 }
 
+#az-kviz .tile {
+  cursor: default;
+}
+
 #az-kviz .tile.available {
   cursor: grab;
 }
 
-#az-kviz .tile:not(.available) {
-  cursor: not-allowed;
+#az-kviz .tile.available:hover {
+  filter: url(#drop-shadow);
+}
+
+#az-kviz .tile .outer {
+  stroke: #000;
 }
 
 #az-kviz .tile text {
   alignment-baseline: middle;
   font-weight: bold;
   text-anchor: middle;
-  paint-order: stroke;
-  stroke-linecap: butt;
-  stroke-linejoin: miter;
-}
-
-#az-kviz .tile.available:hover text {
-  stroke: none;
-}
-
-#az-kviz .outer {
-  stroke: #000;
+  filter: url(#white-etch);
 }
 
 #az-kviz .tile.available:hover .inner {
@@ -46,5 +43,4 @@ body {
 
 #az-kviz .tile.available:hover .outer {
   fill: url(#hover-outer);
-  filter: url(#drop-shadow);
 }
