@@ -5,7 +5,6 @@
             [cljs.spec.alpha :as s]
             [goog.string.format]
             [thi.ng.color.core :as color]
-            [thi.ng.geom.svg.adapter :as adapt]
             [thi.ng.geom.svg.core :as svg]
             [thi.ng.math.core :as math]))
 
@@ -112,8 +111,10 @@
                       available? (conj "available"))]
     [svg/group {:id id
                 :class all-classes}
+     ^{:key "outer"}
      [svg/polygon outer {:class "outer"
                          :fill outer-fill}]
+     ^{:key "inner"}
      [svg/polygon inner {:class "inner"
                          :fill inner-fill}]
      [svg/text center text {:font-size font-size}]]))
@@ -122,13 +123,18 @@
   "Generate SVG gradients for the given `status` and `colour`.
   Gradient shading amount is controlled by `hex-shade`."
   [hex-shade [status colour]]
-  (let [start [0 colour]
-        end [100 (lighten colour hex-shade)]
-        gradient (fn [status suffix attrs]
-                   (let [id (str (name status) suffix)]
-                     (svg/linear-gradient id attrs start end)))]
-    [(gradient status "-inner" {:x1 0 :x2 0 :y1 0 :y2 1})
-     (gradient status "-outer" {:x1 0 :x2 0 :y1 1 :y2 0})]))
+  (let [lighter-colour (lighten colour hex-shade)
+        stop (fn [offset colour]
+               [:stop {:offset (str offset "%")
+                       :stop-color colour}])
+        start (stop 0 colour)
+        end (stop 100 lighter-colour)
+        gradient (fn [suffix attrs]
+                   (let [id (str (name status) "-" suffix)]
+                     ^{:key id}
+                     [:linearGradient (merge {:id id} attrs) start end]))]
+    [(gradient "inner" {:x1 0 :x2 0 :y1 0 :y2 1})
+     (gradient "outer" {:x1 0 :x2 0 :y1 1 :y2 0})]))
 
 ; ----- Public functions -----
 
@@ -188,10 +194,10 @@
         gradients (mapcat (partial status-gradients hex-shade) colours)
         click-handler (fn [e]
                         (when-let [tile (.closest (.-target e) "g.tile.available")]
-                          (on-click (js/parseInt (.-id tile)))))]
+                          (on-click (js/parseInt (.-id tile)))))
+        tile-fn (fn [{:keys [id] :as args}] ^{:key id} [tile args])]
     (fn [_ state]
-      (adapt/inject-element-attribs
-        [:svg#az-kviz {:on-click click-handler
-                       :viewBox [0 0 board-width board-height]}
-         [:defs drop-shadow white-etch gradients]
-         (map (comp tile merge) board-data state)]))))
+      [:svg#az-kviz {:on-click click-handler
+                     :viewBox [0 0 board-width board-height]}
+       [:defs drop-shadow white-etch gradients]
+       (map (comp tile-fn merge) board-data state)])))
