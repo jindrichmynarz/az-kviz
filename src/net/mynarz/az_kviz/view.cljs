@@ -108,9 +108,11 @@
         font-size (if (< (count text) 3) radius (* radius (/ 2 3)))
         available? (not (#{:player-1 :player-2} status))
         all-classes (cond-> (conj classes "tile" (name status))
-                      available? (conj "available"))]
+                      available? (conj "available"))
+        transform-origin (apply format "%dpx %dpx" center)]
     [svg/group {:id id
-                :class all-classes}
+                :class all-classes
+                :style {:transform-origin transform-origin}}
      ^{:key "outer"}
      [svg/polygon outer {:class "outer"
                          :fill outer-fill}]
