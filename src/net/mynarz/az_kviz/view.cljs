@@ -35,7 +35,7 @@
   (/ js.Math.PI 2))
 
 (def sqrt-3
-  (.sqrt js/Math 3))
+  (js/Math.sqrt 3))
 
 ; ----- Static markup -----
 
@@ -100,9 +100,10 @@
   `outer` is the collection of [x y] points for the outer hexagon.
   `radius` is the tile radius from its centre to its edge.
   `status` is the state of the tile as a keyword.
+  `svg` is custom SVG markup to show in the tile.
   `text` is the text to show in the tile."
   [{:keys [center classes id inner outer
-           radius status text]}]
+           radius status svg text]}]
   (let [outer-fill (format "url(#%s-outer)" (name status))
         inner-fill (format "url(#%s-inner)" (name status))
         font-size (if (< (count text) 3) radius (* radius (/ 2 3)))
@@ -119,7 +120,18 @@
      ^{:key "inner"}
      [svg/polygon inner {:class "inner"
                          :fill inner-fill}]
-     [svg/text center text {:font-size font-size}]]))
+     (if svg
+       (let [[x y] center
+             side (* radius (- 3 sqrt-3))
+             inner-side (* side 0.8) ; side minus padding
+             half-side (* side 0.5)]
+        [:svg {:width inner-side
+               :height inner-side
+               :view-box [0 0 100 100]
+               :x (- x half-side)
+               :y (- y half-side)}
+              svg])
+       [svg/text center text {:font-size font-size}])]))
 
 (defn- status-gradients
   "Generate SVG gradients for the given `status` and `colour`.

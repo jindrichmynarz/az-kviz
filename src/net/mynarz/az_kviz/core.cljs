@@ -14,9 +14,12 @@
 (defn wrapper
   []
   [board {:on-click (fn [id]
-                      (swap! state assoc-in [id :status] :player-1)
-                      (js/console.log (logic/who-won @state)))}
-         @state])
+                      (swap! state
+                             update-in
+                             [id :status]
+                             {:default :active
+                              :active :default}))}
+        @state])
 
 ;; -------------------------
 ;; Initialize app

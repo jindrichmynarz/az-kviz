@@ -1,6 +1,13 @@
 (ns net.mynarz.az-kviz.spec
   (:require [cljs.spec.alpha :as s]))
 
+(s/def ::hiccup
+  ; Hiccup representation of HTML
+  (s/or :string string?
+        :element (s/cat :tag keyword?
+                        :attrs (s/? map?)
+                        :content (s/* ::hiccup))))
+
 (s/def ::non-negative-int
   (s/and integer? (complement neg?)))
 
@@ -43,6 +50,10 @@
   ; Status of a tile
   keyword?)
 
+(s/def ::svg
+  ; SVG markup in Hiccup syntax
+  ::hiccup)
+
 (s/def ::text
   ; Tile text, recommended to be max 4 characters
   (s/and string? (comp (partial >= 4) count)))
@@ -53,7 +64,8 @@
                    ::id
                    ::neighbours
                    ::sides
-                   ::status
+                   ::status]
+          :opt-un [::svg
                    ::text]))
 
 (s/def ::board-state
@@ -110,13 +122,6 @@
   (s/keys :opt-un [::on-click
                    ::side
                    ::tile-config]))
-
-(s/def ::hiccup
-  ; Hiccup representation of HTML
-  (s/or :string string?
-        :element (s/cat :tag keyword?
-                        :attrs (s/? map?)
-                        :content (s/* ::hiccup))))
 
 (s/def ::player
   #{:player-1 :player-2})
