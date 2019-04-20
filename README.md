@@ -4,7 +4,7 @@
 
 ## Usage
 
-Include as a dependency: `[net.mynarz.az-kviz "0.1.0"]`
+Include as a dependency: `[net.mynarz.az-kviz "0.1.3"]`
 
 Copy `resources/public/css/style.css` to your project's CSS folder for the base design.
 
