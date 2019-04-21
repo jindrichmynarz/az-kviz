@@ -124,13 +124,17 @@
        (let [[x y] center
              side (* radius (- 3 sqrt-3))
              inner-side (* side 0.8) ; side minus padding
-             half-side (* inner-side 0.5)]
-        [:svg {:width inner-side
-               :height inner-side
-               :view-box [0 0 100 100]
-               :x (- x half-side)
-               :y (- y half-side)}
-          svg])
+             half-side (* inner-side 0.5)
+             attrs {:width inner-side
+                    :height inner-side
+                    :view-box [0 0 100 100]
+                    :x (- x half-side)
+                    :y (- y half-side)}]
+         (->> svg
+              (drop 2)
+              (cons attrs)
+              (cons :svg)
+              vec))
        [svg/text center text {:font-size font-size}])]))
 
 (defn- status-gradients
