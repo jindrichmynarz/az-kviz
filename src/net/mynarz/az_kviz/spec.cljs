@@ -52,7 +52,7 @@
 
 (s/def ::svg
   ; SVG markup in Hiccup syntax
-  ::hiccup)
+  (s/and (comp #{:svg} first) ::hiccup))
 
 (s/def ::text
   ; Tile text, recommended to be max 4 characters
