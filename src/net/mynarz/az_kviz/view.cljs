@@ -100,10 +100,11 @@
   `outer` is the collection of [x y] points for the outer hexagon.
   `radius` is the tile radius from its centre to its edge.
   `status` is the state of the tile as a keyword.
-  `svg` is custom SVG markup to show in the tile.
+  `svg` is the custom SVG markup to show in the tile.
+  `svg-attrs` are the pre-computed attributes (position) for `svg`.
   `text` is the text to show in the tile."
   [{:keys [center classes id inner outer
-           radius status svg text]}]
+           radius status svg svg-attrs text]}]
   (let [outer-fill (format "url(#%s-outer)" (name status))
         inner-fill (format "url(#%s-inner)" (name status))
         font-size (if (< (count text) 3) radius (* radius (/ 2 3)))
@@ -121,20 +122,11 @@
      [svg/polygon inner {:class "inner"
                          :fill inner-fill}]
      (if svg
-       (let [[x y] center
-             side (* radius (- 3 sqrt-3))
-             inner-side (* side 0.8) ; side minus padding
-             half-side (* inner-side 0.5)
-             attrs {:width inner-side
-                    :height inner-side
-                    :view-box [0 0 100 100]
-                    :x (- x half-side)
-                    :y (- y half-side)}]
-         (->> svg
-              (drop 2)
-              (cons attrs)
-              (cons :svg)
-              vec))
+       (->> svg
+            (drop 2)
+            (cons svg-attrs)
+            (cons :svg)
+            vec)
        [svg/text center text {:font-size font-size}])]))
 
 (defn- status-gradients
@@ -202,12 +194,20 @@
                       (* (inc y) y-space) ; Account for spaces
                       padding))
         tile-points (fn [{:keys [coords id]}]
-                      (let [center [(x-offset coords) (y-offset coords)]]
+                      (let [[x y :as center] [(x-offset coords) (y-offset coords)]
+                            side (* r (- 3 sqrt-3))
+                            inner-side (* side 0.8) ; side minus padding
+                            half-side (* inner-side 0.5)]
                         {:center center
                          :id id
                          :inner (hexagon inner-r center)
                          :outer (hexagon r center)
-                         :radius r}))
+                         :radius r
+                         :svg-attrs {:width inner-side
+                                     :height inner-side
+                                     :view-box [0 0 100 100]
+                                     :x (- x half-side)
+                                     :y (- y half-side)}}))
         board-data (map tile-points state)
         gradients (mapcat (partial status-gradients hex-shade) colours)
         click-handler (fn [e]
