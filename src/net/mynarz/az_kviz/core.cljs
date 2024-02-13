@@ -1,7 +1,8 @@
 (ns net.mynarz.az-kviz.core
   (:require [net.mynarz.az-kviz.logic :as logic]
             [net.mynarz.az-kviz.view :refer [board]]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [reagent.dom :as rd]))
 
 ; What is below is just to preview the components
 
@@ -26,8 +27,7 @@
 
 (defn mount-root
   []
-  (when-let [root (.getElementById js/document "app")]
-    (r/render [wrapper] root)))
+  (rd/render [wrapper] (.-body js/document)))
 
 ;; conditionally start your application based on the presence of an "app" element
 ;; this is particularly helpful for testing this ns without launching the app
