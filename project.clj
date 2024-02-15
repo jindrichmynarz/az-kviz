@@ -17,6 +17,7 @@
             "fig:test"  ["trampoline" "run" "-m" "figwheel.main" "--build" "test" "--serve"]}
   :profiles {:dev {:clean-targets ^{:protect false} ["target"]
                    :dependencies [[binaryage/devtools "1.0.7"]
+                                  [org.slf4j/slf4j-nop "2.0.12"]
                                   [com.bhauman/cljs-test-display "0.1.1"]
                                   [com.bhauman/figwheel-main "0.2.18"]
                                   [com.bhauman/rebel-readline-cljs "0.1.4"]
