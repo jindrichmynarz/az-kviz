@@ -32,7 +32,7 @@
   goog.string.format)
 
 (def right-angle
-  (/ js.Math.PI 2))
+  (/ js/Math.PI 2))
 
 (def sqrt-3
   (js/Math.sqrt 3))
