@@ -1,0 +1,10 @@
+{:nrepl {:port 8777}
+ :deps {:aliases [:test]}
+ :dev-http {8280 "resources/public"}
+ :builds {:client {:target :browser
+                   :output-dir "resources/public/js"
+                   :modules {:client {:init-fn net.mynarz.az-kviz.core/main}}
+                   :preloads [devtools.preload]}
+          :test {:target :node-test
+                 :autorun true
+                 :output-to "out/node-tests.js"}}}

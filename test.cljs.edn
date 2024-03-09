@@ -1,4 +1,0 @@
-^{:open-url "http://[[server-hostname]]:[[server-port]]/test.html"
-  :ring-server-options {:port 9501}
-  :watch-dirs ["src" "test"]}
-{:main net.mynarz.az-kviz.runner}

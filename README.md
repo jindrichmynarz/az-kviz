@@ -4,7 +4,7 @@
 
 ## Usage
 
-Include as a dependency: `[net.mynarz.az-kviz "0.1.4"]`
+Include as a dependency: `[net.mynarz/az-kviz "0.2"]`
 
 Copy `resources/public/css/style.css` to your project's CSS folder for the base design.
 
@@ -18,4 +18,4 @@ To determine a game's winner, call `net.mynarz.az-kviz.logic/who-won` on the boa
 
 ## Development
 
-To get a ClojureScript REPL with live code reloading via [figwheel-main](https://figwheel.org), run `lein fig:dev`. To execute the tests, run `lein fig:test`.
+To get a ClojureScript REPL with live code reloading via [shadow-cljs](https://shadow-cljs.github.io/docs/UsersGuide.html), run `npm install` first, then `npm run watch`, and `open http://localhost:8280`. To execute the tests, run `npm run test`.

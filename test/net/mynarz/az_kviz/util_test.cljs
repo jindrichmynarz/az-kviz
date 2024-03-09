@@ -2,7 +2,7 @@
   (:require [net.mynarz.az-kviz.spec :as spec]
             [net.mynarz.az-kviz.util :as util]
             [cljs.spec.alpha :as s]
-            [clojure.test.check] 
+            [clojure.test.check]
             [clojure.test.check.clojure-test :refer-macros [defspec]]
             [clojure.test.check.generators]
             [clojure.test.check.properties :refer-macros [for-all]]))

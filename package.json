@@ -1,0 +1,28 @@
+{
+  "name": "net.mynarz/az-kviz",
+  "description": "Reagent component for the AZ-kvíz board",
+  "version": "0.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jindrichmynarz/az-kviz"
+  },
+  "author": {
+    "name": "Jindřich Mynarz",
+    "email": "mynarzjindrich@gmail.com"
+  },
+  "license": "EPL-2.0",
+  "scripts": {
+    "clean": "rm -rf target; rm -rf resources/public/js; rm -rf resources/test",
+    "watch": "npx shadow-cljs watch client", 
+    "release": "npx shadow-cljs release client",
+    "test": "npx shadow-cljs watch test", 
+    "build-report": "npx shadow-cljs run shadow.cljs.build-report client target/build-report.html"
+  },
+  "devDependencies": {
+    "shadow-cljs": "2.27.5"
+  },
+  "dependencies": {
+    "react": "^18.2.0-1",
+    "react-dom": "^18.2.0-1"
+  }
+}

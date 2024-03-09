@@ -1,10 +1,17 @@
 (ns net.mynarz.az-kviz.core
   (:require [net.mynarz.az-kviz.logic :as logic]
             [net.mynarz.az-kviz.view :refer [board]]
+            ["react" :as react]
             [reagent.core :as r]
-            [reagent.dom :as rd]))
+            [reagent.dom.client :as rdc]))
 
 ; What is below is just to preview the components
+
+(defn dev-setup
+  []
+  (when goog.DEBUG
+    (enable-console-print!) ;; so that println writes to `console.log`
+    (println "dev mode")))
 
 (def state
   (r/atom (logic/init-board-state)))
@@ -25,17 +32,17 @@
 ;; -------------------------
 ;; Initialize app
 
-(defn mount-root
+(defonce root
+  ;; Init only on use, this ns is loaded for SSR build also
+  (delay (rdc/create-root (js/document.getElementById "app"))))
+
+(defn run
   []
-  (rd/render [wrapper] (.-body js/document)))
+  (dev-setup)
+  (when r/is-client
+    ;; Enable StrictMode to warn about e.g. findDOMNode
+    (rdc/render @root [:> react/StrictMode {} [wrapper]])))
 
-;; conditionally start your application based on the presence of an "app" element
-;; this is particularly helpful for testing this ns without launching the app
-(mount-root)
-
-;; specify reload hook with ^;after-load metadata
-(defn ^:after-load on-reload []
-  (mount-root))
-  ;; optionally touch your app-state to force rerendering depending on
-  ;; your application
-  ;; (swap! app-state update-in [:__figwheel_counter] inc)
+(defn ^:export main
+  []
+  (run))

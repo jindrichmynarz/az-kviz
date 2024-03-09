@@ -53,7 +53,7 @@
 
 (def board-7-any-player
   (logic/init-board-state 7))
-  
+
 (deftest in-board?
   (are [side coord pred] (pred (logic/in-board? side coord))
        3 [2 2] true?
@@ -85,7 +85,7 @@
 (deftest who-won
    (testing "if player won"
      (are [board winner] (= (logic/who-won board) winner)
-          board-3-player-1 :player-1 
+          board-3-player-1 :player-1
           board-3-player-2 :player-2
           board-4-player-1 :player-1
           board-4-player-2 :player-2))
