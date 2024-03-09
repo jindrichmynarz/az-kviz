@@ -1,25 +1,15 @@
-(defproject net.mynarz/az-kviz "0.1.4"
+(defproject net.mynarz/az-kviz "0.2"
   :description "Reagent component for the AZ-kvíz board"
   :url "https://github.com/jindrichmynarz/az-kviz"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.11.1"]
-                 [org.clojure/clojurescript "1.10.516"]
+  :dependencies [[org.clojure/clojurescript "1.11.132" :scope "provided"]
                  [reagent "1.2.0"]
-                 [cljsjs/react "18.2.0-1"]
-                 [cljsjs/react-dom "18.2.0-1"]
-                 [thi.ng/math "0.2.2"]
-                 [thi.ng/color "1.3.0"]
-                 [thi.ng/geom "1.0.0-RC3"]]
+                 [thi.ng/color "1.5.1"]
+                 [thi.ng/geom "1.0.1"]
+                 [thi.ng/math "0.3.2"]]
   :source-paths ["src"]
-  :aliases {"fig"       ["trampoline" "run" "-m" "figwheel.main"]
-            "fig:dev"   ["trampoline" "run" "-m" "figwheel.main" "--build" "dev" "--repl"]
-            "fig:test"  ["trampoline" "run" "-m" "figwheel.main" "--build" "test" "--serve"]}
   :profiles {:dev {:clean-targets ^{:protect false} ["target"]
                    :dependencies [[binaryage/devtools "1.0.7"]
-                                  [org.slf4j/slf4j-nop "2.0.12"]
-                                  [com.bhauman/cljs-test-display "0.1.1"]
-                                  [com.bhauman/figwheel-main "0.2.18"]
-                                  [com.bhauman/rebel-readline-cljs "0.1.4"]
                                   [org.clojure/test.check "1.1.1"]]
                    :resource-paths ["target"]}})
