@@ -13,9 +13,9 @@
   "license": "EPL-2.0",
   "scripts": {
     "clean": "rm -rf target; rm -rf resources/public/js; rm -rf resources/test",
-    "watch": "npx shadow-cljs watch client", 
+    "watch": "npx shadow-cljs watch client",
     "release": "npx shadow-cljs release client",
-    "test": "npx shadow-cljs watch test", 
+    "test": "npx shadow-cljs watch test",
     "build-report": "npx shadow-cljs run shadow.cljs.build-report client target/build-report.html"
   },
   "devDependencies": {
